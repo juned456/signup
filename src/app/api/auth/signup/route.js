@@ -10,19 +10,25 @@ export async function POST(req) {
   try {
     const body = await req.json();
     const parsed = signupSchema.safeParse(body);
+
     if (!parsed.success) {
       return NextResponse.json(
         { error: parsed.error.errors[0].message },
         { status: 400 }
       );
     }
+
     const { name, email, mobile, password } = parsed.data;
+
+    const emailLower = email.toLowerCase();
+    const mobileVal = mobile.trim();
 
     // check existing user
     const exists = await pool.query(
       "SELECT id FROM users_next WHERE email = $1",
       [emailLower]
     );
+
     if (exists.rows.length) {
       return NextResponse.json(
         { error: "User already exists" },
