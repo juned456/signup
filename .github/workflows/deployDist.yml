@@ -1,0 +1,11 @@
+name: Deploy Distribution
+on: [push, workflow_dispatch]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Get code"
+        run: |
+          echo "Hello, World!"
+          echo "${{ toJson(github)}}"
+          git clone https://github.com/${{github.repository}}.git
