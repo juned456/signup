@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download Production Build
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v4
         with:
           name: production-build
           path: .next/production
