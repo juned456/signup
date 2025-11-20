@@ -1,6 +1,13 @@
 name: Deploy Distribution
 
-on: [push, workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - README.md
+      - ".github/**"
+  workflow_dispatch:
 
 jobs:
   test:
