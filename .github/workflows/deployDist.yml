@@ -1,11 +1,61 @@
 name: Deploy Distribution
+
 on: [push, workflow_dispatch]
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: "Get code"
-        run: |
-          echo "Hello, World!"
-          echo "${{ toJson(github)}}"
-          git clone https://github.com/${{github.repository}}.git
+      - name: Get code
+        uses: actions/checkout@v5
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Check Node version
+        run: node -v
+
+      - name: Cache npm cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci # not npm install because it may change package-lock.json
+
+      - name: Run test case
+        run: npm run test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v5
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Cache npm cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Application
+        run: npm run build
+
+      - name: Deploy Application
+        run: echo "Deploying Application..."

@@ -1,5 +1,5 @@
 name: Greeting
-on: [push, workflow_dispatch]
+on: [workflow_dispatch]
 #below is the expanded version
 # on:
 #   - push
