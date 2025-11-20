@@ -71,7 +71,7 @@ export default function SignupPage() {
         <CardContent>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <Label>Name</Label>
+              <Label>Full Name</Label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
