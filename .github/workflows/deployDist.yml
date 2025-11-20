@@ -62,13 +62,17 @@ jobs:
 
       - name: Build Application
         run: npm run build
-      - name: Debug — List files
+
+      - name: Debug – List after build
         run: ls -R .
+
       - name: Upload Production Build
         uses: actions/upload-artifact@v4
         with:
           name: production-build
           path: .next
+          include-hidden-files: true
+          if-no-files-found: error
 
   deploy:
     needs: build
