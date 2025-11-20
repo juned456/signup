@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
   reactCompiler: true,
-};
 
-export default nextConfig;
+  // for GitHub Pages under https://juned456.github.io/signup
+  basePath: "/signup",
+  assetPrefix: "/signup/",
+
+  // GitHub Pages = static export
+  output: "export",
+  images: {
+    unoptimized: true,
+  },
+};
