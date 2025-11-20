@@ -29,7 +29,7 @@ jobs:
         run: npm ci # not npm install because it may change package-lock.json
 
       - name: Run test case
-        run: npm run test
+        run: npm run test:ci
 
   deploy:
     needs: test
