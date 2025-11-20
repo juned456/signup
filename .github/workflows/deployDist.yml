@@ -37,8 +37,7 @@ jobs:
 
       - name: Run test case
         run: npm run test:ci
-
-  deploy:
+  build:
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -63,6 +62,22 @@ jobs:
 
       - name: Build Application
         run: npm run build
+
+      - name: Upload Production Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-build
+          path: .next/production
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Production Build
+        uses: actions/download-artifact@v5
+        with:
+          name: production-build
+          path: .next/production
 
       - name: Deploy Application
         run: echo "Deploying Application..."
