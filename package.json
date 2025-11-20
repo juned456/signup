@@ -5,7 +5,7 @@
   "homepage": "https://juned456.github.io/signup",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next export",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "jest --watch",
