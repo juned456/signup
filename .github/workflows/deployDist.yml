@@ -67,7 +67,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: production-build
-          path: .next/production
+          path: .next
 
   deploy:
     needs: build
@@ -77,7 +77,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: production-build
-          path: .next/production
+          path: .next
 
       - name: Deploy Application
         run: echo "Deploying Application..."
