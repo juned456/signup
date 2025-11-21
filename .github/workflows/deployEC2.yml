@@ -1,12 +1,12 @@
-name: Deploy on git pages
+name: Deploy on EC2
 
 on:
-  #   push:
-  #     branches:
-  #       - main
-  #     paths-ignore:
-  #       - README.md
-  #       - ".github/**"
+  # push:
+  #   branches:
+  #     - main
+  #   paths-ignore:
+  #     - README.md
+  #     - ".github/**"
   workflow_dispatch:
 
 jobs:
@@ -37,6 +37,7 @@ jobs:
 
       - name: Run test case
         run: npm run test:ci
+
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -60,37 +61,33 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Application
+      - name: Build Application (sanity check)
         run: npm run build
-
-      - name: Debug – List after build
-        run: ls -R .
-
-      - name: Upload Production Build
-        uses: actions/upload-artifact@v4
-        with:
-          name: github-pages
-          path: .next
-          include-hidden-files: true
-          if-no-files-found: error
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-    permissions:
-      pages: write # to deploy to Pages
-      id-token: write # to verify the deployment originates from an appropriate source
-
-    # Deploy to the github-pages environment
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    # Specify runner + deployment step
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            # go to app folder (change if your path is different)
+            cd /var/www/signup
+
+            echo "Pulling latest code..."
+            git pull origin main
+
+            echo "Installing dependencies..."
+            npm ci --omit=dev
+
+            echo "Building app..."
+            npm run build
+
+            echo "Restarting app with PM2..."
+            # if app already exists -> restart, else start it
+            pm2 restart signup || pm2 start npm --name "signup" -- run start

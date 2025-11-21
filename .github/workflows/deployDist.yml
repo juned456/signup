@@ -1,12 +1,12 @@
 name: Deploy test
 
 on:
-  push:
-    # branches:
-    #   - main
-    paths-ignore:
-      - README.md
-      - ".github/**"
+  # push:
+  #   # branches:
+  #   #   - main
+  #   paths-ignore:
+  #     - README.md
+  #     - ".github/**"
   workflow_dispatch:
 
 jobs:
